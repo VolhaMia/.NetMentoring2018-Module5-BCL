@@ -51,6 +51,8 @@
     <Compile Include="FileMover.cs" />
     <Compile Include="FileSystemCreateEventArgs.cs" />
     <Compile Include="FileWatcher.cs" />
+    <Compile Include="ILogger.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="Models\FileModel.cs" />
     <Compile Include="Models\Rule.cs" />
     <Compile Include="Program.cs" />

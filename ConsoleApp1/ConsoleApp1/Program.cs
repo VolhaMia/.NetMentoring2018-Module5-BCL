@@ -36,8 +36,9 @@ namespace ConsoleApp1
 
                 Console.WriteLine(config.Culture.DisplayName);
 
-                _fileMover = new FileMover(_rules, config.Rules.DefaultDirectory);
-                var watcher = new FileWatcher(_directories);
+                ILogger logger = new Logger();
+                _fileMover = new FileMover(_rules, config.Rules.DefaultDirectory, logger);
+                var watcher = new FileWatcher(_directories, logger);
 
                 watcher.Created += OnCreated;
 

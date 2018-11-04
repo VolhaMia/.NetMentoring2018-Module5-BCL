@@ -13,12 +13,14 @@ namespace ConsoleApp1
 {
     public class FileMover
     {
+        private readonly ILogger _logger;
         private readonly List<Rule> _rules;
         private readonly string _defaultDirectory;
         private const int CheckingFileTimeout = 500;
 
-        public FileMover(IEnumerable<Rule> rules, string defaultDirectory)
+        public FileMover(IEnumerable<Rule> rules, string defaultDirectory, ILogger logger)
         {
+            _logger = logger;
             _rules = rules.ToList();
             _defaultDirectory = defaultDirectory;
         }
@@ -34,17 +36,17 @@ namespace ConsoleApp1
                 {
                     rule.MatchCount++;
                     string toDir = CreateDestination(file, rule);
-                    Console.WriteLine(Strings.RuleFound);
+                    _logger.Log(Strings.RuleFound);
                     await MoveFileToAsync(fromDir, toDir);
-                    Console.WriteLine(string.Format(Strings.FileMovedTo, file.FullName, toDir));
+                    _logger.Log(string.Format(Strings.FileMovedTo, file.FullName, toDir));
                     return;
                 }
             }
 
             string destination = Path.Combine(_defaultDirectory, file.Name);
-            Console.WriteLine(Strings.RuleNotFound);
+            _logger.Log(Strings.RuleNotFound);
             await MoveFileToAsync(fromDir, destination);
-            Console.WriteLine(string.Format(Strings.FileMovedTo, file.FullName, destination));
+            _logger.Log(string.Format(Strings.FileMovedTo, file.FullName, destination));
         }
 
         private string CreateDestination(FileModel file, Rule rule)
@@ -88,7 +90,7 @@ namespace ConsoleApp1
                 }
                 catch (FileNotFoundException)
                 {
-                    Console.WriteLine(Strings.FileNotFound);
+                    _logger.Log(Strings.FileNotFound);
                     break;
                 }
                 catch (IOException ex)

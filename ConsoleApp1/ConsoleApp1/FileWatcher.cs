@@ -12,9 +12,11 @@ namespace ConsoleApp1
     public class FileWatcher
     {
         private readonly List<FileSystemWatcher> _fileSystemWatchers;
+        private readonly ILogger _logger;
 
-        public FileWatcher(IEnumerable<string> directories)
+        public FileWatcher(IEnumerable<string> directories, ILogger logger)
         {
+            _logger = logger;
             _fileSystemWatchers = directories.Select(FileSystemCreateWatcher).ToList();
         }
 
@@ -36,7 +38,7 @@ namespace ConsoleApp1
                 };
             fileSystemWatcher.Created += (sender, fileSystemEventArgs) =>
             {
-               Console.WriteLine(string.Format(Strings.FileFound, fileSystemEventArgs.Name));
+                _logger.Log(string.Format(Strings.FileFound, fileSystemEventArgs.Name));
                 OnCreated(new FileModel { FullName = fileSystemEventArgs.FullPath, Name = fileSystemEventArgs.Name });
             };
 
